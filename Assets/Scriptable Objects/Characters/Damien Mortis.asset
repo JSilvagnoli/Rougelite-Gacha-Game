@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa75959915ac796479a0fa99cb5e01c0, type: 3}
+  m_Name: Damien Mortis
+  m_EditorClassIdentifier: 
+  model: {fileID: 4311452597091117019, guid: 45bc8d802f6b7fe4ca290836c4ccf166, type: 3}
+  characterName: Damien Mortis
+  description: "Damien Mortis unintentionally found himself in the vicinity of a
+    mysterious tower. As he ventured inside, the supernatural entities within proved
+    overwhelming, leading to his demise. However, to Ethan Magus' astonishment, after
+    clearly dying, Damien rose again, imbued with a newfound power \u2013 the ability
+    to command the souls of defeated monsters. \n\nHaunted by his own death and rebirth,
+    Damien embraced the dark gift bestowed upon him by the Tower. Rather than succumbing
+    to the fear of his own demise, he sought to unravel the mysteries of the towers
+    and the connection between life and death. As The Revenant Necromancer, he became
+    an eerie force on the battlefield, turning the tide by reanimating defeated monsters
+    to serve his bidding. \n\nWitnessing Damien's resolve and newfound powers, Ethan
+    Magus recognized his potential and recruited him to the team. Now, Damien Mortis
+    stands alongside other allies, ready to face the Towers and The Cataclysm, each
+    with their unique abilities contributing to the battle against the encroaching
+    darkness."
+  abilityScript: {fileID: 0}

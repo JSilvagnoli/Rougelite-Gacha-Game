@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa75959915ac796479a0fa99cb5e01c0, type: 3}
+  m_Name: Night Witch
+  m_EditorClassIdentifier: 
+  model: {fileID: 4311452597091117019, guid: 45bc8d802f6b7fe4ca290836c4ccf166, type: 3}
+  characterName: Jessica Night
+  description: Jessica Night, a humble tavern worker, had her life changed one fateful
+    night when confronted by two menacing monsters on her way home. Fueled by fear
+    and a fierce determination, Jessica's latent magical abilities surged to the
+    surface. Unbeknownst to her, she was a natural sorceress with unparalleled potential. 
+    The magical outburst caught the attention of Ethan Magus, who recognized her
+    extraordinary gift. Transporting Jessica to Magus Manor, Ethan explained the
+    looming threat of The Cataclysm and his quest to assemble powerful allies. Recognizing
+    Jessica's potential, he sent her to a mysterious tower, promising that if she
+    conquered it, she would not only harness a deeper understanding of her powers
+    but also become a valuable ally in the fight against The Cataclysm.  With ease,
+    Jessica vanquished the tower's final boss, earning the moniker "Night Witch."
+    Now, armed with newfound magical prowess, she joins Ethan Magus in the battle
+    against the Towers and The Cataclysm, determined to explore the extent of her
+    abilities and protect the world from the encroaching darkness.
+  abilityScript: {fileID: 0}

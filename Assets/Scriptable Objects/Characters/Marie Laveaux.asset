@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa75959915ac796479a0fa99cb5e01c0, type: 3}
+  m_Name: Marie Laveaux
+  m_EditorClassIdentifier: 
+  model: {fileID: 4311452597091117019, guid: 45bc8d802f6b7fe4ca290836c4ccf166, type: 3}
+  characterName: Marie Laveaux
+  description: Marie Laveaux, a skilled herbalist and healer in a small village,
+    had always felt a deep connection to the mystical energies of the world. One
+    day, as she wandered into a mysterious tower seeking rare herbs for her remedies,
+    she unknowingly triggered a sequence of events that transcended the boundaries
+    of life and death. Within the tower, Marie encountered ancient Voodoo spirits
+    that recognized her affinity for the mystical arts. After a series of trials
+    and challenges, she emerged from the tower not only with the herbs she sought
+    but also as the chosen vessel for the spirits' power. Bestowed with the knowledge
+    of ancient Voodoo rituals and the ability to commune with spirits, she became
+    the Witch Doctor. Marie Laveaux now harnesses the power of the tower's Voodoo
+    spirits to heal and protect. The spirits guide her in the delicate balance between
+    life and death, enabling her to manipulate mystical energies for both offensive
+    and defensive purposes. Recognizing the significance of her newfound abilities,
+    Marie joins forces with Ethan Magus and his team to use her Voodoo magic against
+    the Towers and The Cataclysm. After clearing the tower and gaining the trust
+    of the Voodoo spirits, Marie embraced her role as The Witch Doctor, using her
+    powers to bring balance and harmony to the magical forces at play in the world.
+  abilityScript: {fileID: 0}

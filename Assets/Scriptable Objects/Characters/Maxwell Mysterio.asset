@@ -1,0 +1,47 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa75959915ac796479a0fa99cb5e01c0, type: 3}
+  m_Name: Maxwell Mysterio
+  m_EditorClassIdentifier: 
+  model: {fileID: 4311452597091117019, guid: 45bc8d802f6b7fe4ca290836c4ccf166, type: 3}
+  characterName: Maxwell Mysterio
+  description: Maxwell Mysterio knew from an early age that he wanted to be a magician,
+    inspired by the enchanting performances of his grandfather with a deck of cards.
+    However, he rejected the opportunity to inherit his grandfather's magic shop,
+    driven by a desire to become the World's Greatest Showman. Reality struck hard
+    when Maxwell realized that somewhere along the way he lost his love of magic
+    and only cared about money. Overtime people slowly lost interest in his show
+    and in a last ditch effort to save his show he borrowed money from the wrong
+    group. His dreams of grandeur and greed led him down a dark path, unable to pay
+    back his debt, he was attacked and left for dead. Monsters found him, thinking
+    he would be an easy meal and brought him to a mysterious tower, the last remnants
+    of his once-colorful life reduced to his grandfather's old deck of cards clutched
+    tightly in his hands. In the depths of despair, Maxwell accepted his fate. However,
+    in that moment of darkness, he heard his grandfather's voice echoing in his mind.
+    His grandfather reminded him that true magic wasn't about grand illusions or
+    showmanship but about the connection between performer and audience, the genuine
+    wonder and joy created in each moment. His grandfather's words reminded Maxwell
+    of his dream. In a last, desperate effort for survival and the vision of one
+    last magical show, threw a card at an approaching monster. To his surprise, the
+    card sliced through the creature, decapitating it. Fueled by a newfound determination,
+    he instinctively pulled out another card and, with a flourish, froze another
+    monster in its tracks. With each drawn card, Maxwell discovered a different arcane
+    ability - shooting balls of fire, summoning illusions, and manipulating the very
+    fabric of reality. Embracing his unexpected magical talents, Maxwell Mysterio
+    rose from the depths of failure as The Arcane Cardmaster. Now armed not only
+    with his grandfather's deck of cards but also with the magical essence of true
+    wonder, Maxwell travels alongside Ethan Magus and his team, ready to showcase
+    his mesmerizing magic in the battle against the Towers and The Cataclysm. Maxwell's
+    journey from the brink of demise to becoming The Arcane Ringmaster adds a touch
+    of theatrical flair to the team, making him a captivating and unpredictable ally
+    in the fight against the encroaching darkness.
+  abilityScript: {fileID: 0}

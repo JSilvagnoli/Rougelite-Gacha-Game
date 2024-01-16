@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa75959915ac796479a0fa99cb5e01c0, type: 3}
+  m_Name: Ethan Magus
+  m_EditorClassIdentifier: 
+  model: {fileID: 4311452597091117019, guid: 45bc8d802f6b7fe4ca290836c4ccf166, type: 3}
+  characterName: Ethan Magus
+  description: Ethan Magus, once a formidable sorcerer, grew disillusioned with the
+    lackluster magical prowess of the world's sorcerers. Seeking greater challenges,
+    he delved into dark magic at the Library of Knowledge, inadvertently summoning
+    The Cataclysm. Stripped of his powers, he was rescued by a sorcerer monk who
+    taught him basic magic and combat. Unsatisfied, Ethan confronted his master,
+    resulting in the monk's death.  Driven by revenge, Ethan sought stronger magic
+    and was lured by The Infernal Compendium to The Crystal Nexus. Attempting to
+    claim its power, he unknowingly opened a portal for The Cataclysm, triggering
+    The Convergence. Towers from The Dark Zone brought monstrous beings to Earth.
+    Realizing his error, Ethan vowed to protect Earth, defeating the first tower.
+    The Crystal Nexus transformed him into the Omnimancer Paragon, armed with The
+    Illuminated Codex.  Now, Ethan seeks powerful allies to defeat the Towers and
+    The Cataclysm, attaining redemption for his past actions.
+  abilityScript: {fileID: 0}
