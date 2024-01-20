@@ -24,6 +24,8 @@ public class Dialogue : MonoBehaviour
     public DialogueController dialogueController;
     public InteractWithNPC interactWithNPC;
 
+    GameObject character = null;
+
     private void Start()
     {
         textComponent.text = string.Empty;
@@ -35,6 +37,16 @@ public class Dialogue : MonoBehaviour
 
     private void Update()
     {
+        if (character == null)
+        {
+            character = GameObject.FindGameObjectWithTag("Character");
+        }
+        else
+        {
+            dialogueController = character.GetComponent<DialogueController>();
+            interactWithNPC = character.GetComponent<InteractWithNPC>();
+        }
+
         if (dialogue && dialogueController.isClicking)
         {
             if (textComponent.text == npcDialogueData[npcIndex].lines[index])

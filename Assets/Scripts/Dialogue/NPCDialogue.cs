@@ -6,6 +6,7 @@ using UnityEngine;
 public class NPCDialogue : ScriptableObject
 {
     public string npcName;
+    [TextArea]
     public List<string> lines;
     public int index;
     public GameObject npcGameObject;

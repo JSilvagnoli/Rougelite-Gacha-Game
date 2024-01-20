@@ -6,6 +6,7 @@ using UnityEngine;
 public class RoomSpawner : MonoBehaviour
 {
     private RoomTemplates roomTemplates;
+    private RoomInformation roomInformation;
 
     public int maxNumberOfRooms;
     public int numberOfRoomsSpawned;
@@ -15,12 +16,7 @@ public class RoomSpawner : MonoBehaviour
 
     GameObject newRoom = null;
 
-    public bool healthRoomSpawned = false;
-    public bool treasureRoomSpawned = false;
-    public bool shopRoomSpawned = false;
-    public bool weaponRoomSpawned = false;
-    public bool abilityRoomSpawned = false;
-    public bool bossRoomSpawned = false;
+    private bool opening;
 
     private void Start()
     {
@@ -40,60 +36,83 @@ public class RoomSpawner : MonoBehaviour
 
     private void Spawn()
     {
-        int consecutiveEnemyRooms = 0;
         int maxConsecutiveEnemyRooms = Random.Range(4, 6);
 
         while (numberOfRoomsSpawned < maxNumberOfRooms)
         {
-            if (Random.Range(0, 100) < 5)
+            if (Random.Range(0, 100) < 30)
             {
-                newRoom = roomTemplates.treasureRoom;
-
-                // 5% chance to spawn the treasure room
-                newRoomPosition = new Vector3(currentRoomPosition.x, currentRoomPosition.y + 100, currentRoomPosition.z);
-                Instantiate(newRoom, newRoomPosition, Quaternion.identity);
-
-                currentRoomPosition = newRoomPosition;
-
-                consecutiveEnemyRooms++;
+                // Spawn a room with an opening for special room
+                int rand = Random.Range(0, roomTemplates.enemyRoomsWithOpenings.Length);
+                newRoom = roomTemplates.enemyRoomsWithOpenings[rand];
+                opening = true;
             }
             else
             {
-                // Spawn a special room
-                if (consecutiveEnemyRooms > maxConsecutiveEnemyRooms)
-                {
-                    int rand = Random.Range(0, roomTemplates.specialRooms.Count);
-                    newRoom = roomTemplates.specialRooms[rand];
+                // Spawn a normal top bottom enemy room
+                int rand = Random.Range(0, roomTemplates.enemyRooms.Length);
+                newRoom = roomTemplates.enemyRooms[rand];
+            }
 
-                    // Spawn a new room at random
-                    newRoomPosition = new Vector3(currentRoomPosition.x, currentRoomPosition.y + 100, currentRoomPosition.z);
-                    Instantiate(newRoom, newRoomPosition, Quaternion.identity);
+            // Spawn a new room
+            newRoomPosition = new Vector3(currentRoomPosition.x, currentRoomPosition.y + 100, currentRoomPosition.z);
+            Instantiate(newRoom, newRoomPosition, Quaternion.identity);
 
-                    currentRoomPosition = newRoomPosition;
-
-                    Debug.Log(newRoom.name + " spawned");
-
-                    consecutiveEnemyRooms = 0;
-
-                    maxConsecutiveEnemyRooms = Random.Range(3, 7);
-                }
-                // Spawn an enemy room
-                else
-                {
-                    int rand = Random.Range(0, roomTemplates.enemyRooms.Length);
-                    newRoom = roomTemplates.enemyRooms[rand];
-
-                    // Spawn a new room at random
-                    newRoomPosition = new Vector3(currentRoomPosition.x, currentRoomPosition.y + 100, currentRoomPosition.z);
-                    Instantiate(newRoom, newRoomPosition, Quaternion.identity);
-
-                    currentRoomPosition = newRoomPosition;
-
-                    consecutiveEnemyRooms++;
-                }
-            }            
+            currentRoomPosition = newRoomPosition;
 
             numberOfRoomsSpawned++;
+
+            if (opening)
+            {
+                GameObject[] newRoomSpawnPoints = newRoom.transform.GetComponentsInChildren<Transform>()
+                    .Where(child => child.CompareTag("SpawnPoint"))
+                    .Select(child => child.gameObject)
+                    .ToArray();
+
+                foreach (GameObject spawnPoint in newRoomSpawnPoints)
+                {
+                    roomInformation = spawnPoint.GetComponent<RoomInformation>();
+                    ChooseRoom();
+                }
+            }
+
+            opening = false;
+        }
+    }
+
+    private void ChooseRoom()
+    {
+        if (roomInformation.openingDirection == 1)
+        {
+            if (Random.Range(0, 100) < 5)
+            {
+                newRoomPosition = new Vector3(currentRoomPosition.x + 100, currentRoomPosition.y, currentRoomPosition.z);
+                Instantiate(roomTemplates.treasureRoomLeft, newRoomPosition, Quaternion.identity);
+            }
+            else
+            {
+                int rand = Random.Range(0, roomTemplates.specialRoomsLeft.Length);
+                newRoom = roomTemplates.specialRoomsLeft[rand];
+
+                newRoomPosition = new Vector3(currentRoomPosition.x + 100, currentRoomPosition.y, currentRoomPosition.z);
+                Instantiate(newRoom, newRoomPosition, Quaternion.identity);
+            }
+        }
+        else
+        {
+            if (Random.Range(0, 100) < 5)
+            {
+                newRoomPosition = new Vector3(currentRoomPosition.x - 100, currentRoomPosition.y, currentRoomPosition.z);
+                Instantiate(roomTemplates.treasureRoomRight, newRoomPosition, Quaternion.identity);
+            }
+            else
+            {
+                int rand = Random.Range(0, roomTemplates.specialRoomsRight.Length);
+                newRoom = roomTemplates.specialRoomsRight[rand];
+
+                newRoomPosition = new Vector3(currentRoomPosition.x - 100, currentRoomPosition.y, currentRoomPosition.z);
+                Instantiate(newRoom, newRoomPosition, Quaternion.identity);
+            }
         }
     }
 

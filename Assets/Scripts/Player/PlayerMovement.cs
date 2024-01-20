@@ -12,13 +12,7 @@ public class PlayerMovement : MonoBehaviour
     [Header("Walking")]
     float horizontalInput;
     float verticalInput;
-    [SerializeField] float walkingSpeed, currentSpeed;
-    [SerializeField] float accelerationTime = 0.2f;
-    [SerializeField] float decelerationTime = 0.2f;
-    float accelerationVelocitySmoothing;
-    float decelerationVelocitySmoothing;
-    float noInputTimer = 0.0f;
-    float noInputDurationThreshold = 0.5f;
+    [SerializeField] float walkingSpeed;
     [SerializeField] float turnSmoothTime;
     float turnSmoothVelocity;
 
@@ -36,18 +30,17 @@ public class PlayerMovement : MonoBehaviour
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
-    }
 
-    private void Start()
-    {
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        // Finding the player camera by name
+        GameObject playerCamGameObject = GameObject.Find("Main Character Camera");
+        playerCam = playerCamGameObject.transform;
     }
 
     private void Update()
     {
         Look();
 
+        // Resetting the dash cooldown time
         dashCooldownTimeCounter = dashCooldownTime;
 
         if (isDashing)
@@ -64,6 +57,7 @@ public class PlayerMovement : MonoBehaviour
     }
 
     // Player Inputs
+    // Called when walk input is received
     public void OnWalk(InputAction.CallbackContext context)
     {
         if (!enabled)
@@ -89,72 +83,24 @@ public class PlayerMovement : MonoBehaviour
         {
             float targetAngle = Mathf.Atan2(moveDirection.x, moveDirection.z) * Mathf.Rad2Deg + playerCam.eulerAngles.y;
 
+            // Smoothly rotates the player
             float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
             transform.rotation = Quaternion.Euler(0.0f, angle, 0.0f);
 
             newMoveDirection = Quaternion.Euler(0.0f, targetAngle, 0.0f) * Vector3.forward;
 
-            // Acceleration
-            if (currentSpeed < walkingSpeed)
-            {
-                float targetSpeed = moveDirection.magnitude * walkingSpeed;
-                currentSpeed = Mathf.SmoothDamp(currentSpeed, targetSpeed, ref accelerationVelocitySmoothing, accelerationTime);
+            Vector3 targetVelocity = newMoveDirection * walkingSpeed;
 
-                rb.AddForce(newMoveDirection * currentSpeed * 5.0f * Time.deltaTime, ForceMode.VelocityChange);
-
-                if (currentSpeed > walkingSpeed)
-                {
-                    LimitVelocity();
-                }
-            }
-
-            // Reset no input timer when moving
-            noInputTimer = 0.0f;
-
-            // Circular Movement
-            if (walk.magnitude >= 0.1f)
-            {
-                float radius = 0.5f;
-
-                float timeCounter = Time.time * currentSpeed;
-
-                Vector3 circularForce = new Vector3(Mathf.Sin(timeCounter) * radius, 0.0f, Mathf.Cos(timeCounter) * radius);
-
-                rb.AddForce(circularForce, ForceMode.Acceleration);
-            }
+            // Sets the velocity directly with smooth interpolation
+            rb.velocity = Vector3.Lerp(rb.velocity, targetVelocity, Time.deltaTime * 5.0f);
         }
-        // Deceleration
         else
         {
-            // Increment no input timer when not moving
-            noInputTimer += Time.fixedDeltaTime;
-
-            // Apply deceleration only if the no input duration threshold is reached
-            if (noInputTimer >= noInputDurationThreshold)
-            {
-                float decelerationTargetSpeed = 0.0f;
-
-                currentSpeed = Mathf.SmoothDamp(currentSpeed, decelerationTargetSpeed, ref decelerationVelocitySmoothing, decelerationTime);
-
-                rb.AddForce(-newMoveDirection * currentSpeed * 20.0f * Time.deltaTime, ForceMode.VelocityChange);
-            }
+            rb.velocity = Vector3.zero;
         }
     }
 
-    // Limits the characters velocity
-    private void LimitVelocity()
-    {
-        Vector3 velocity = rb.velocity;
-        velocity.y = 0.0f;
-        currentSpeed = velocity.magnitude;
-
-        // Smoothly decrease the speed when currentSpeed is greater than walkingSpeed
-        float targetSpeed = Mathf.Lerp(currentSpeed, walkingSpeed, Time.deltaTime);
-
-        Vector3 limitedVelocity = velocity.normalized * targetSpeed;
-        rb.velocity = new Vector3(limitedVelocity.x, rb.velocity.y, limitedVelocity.z);
-    }
-
+    // Called when look input is received
     public void OnLook(InputAction.CallbackContext context)
     {
         if (!enabled)
@@ -165,16 +111,18 @@ public class PlayerMovement : MonoBehaviour
         look = context.ReadValue<Vector2>();
     }
 
+    // Rotates the camera based on mouse input
     private void Look()
     {
         float mouseY = look.y * Time.deltaTime;
 
         xRotation -= mouseY;
-        xRotation = Mathf.Clamp(xRotation, -90f, 90f);
+        xRotation = Mathf.Clamp(xRotation, -90.0f, 90.0f);
 
-        playerCam.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
+        playerCam.localRotation = Quaternion.Euler(xRotation, 0.0f, 0.0f);
     }
 
+    // Called when dash input is received
     public void OnDash(InputAction.CallbackContext context)
     {
         if (!enabled)
@@ -182,6 +130,7 @@ public class PlayerMovement : MonoBehaviour
             return;
         }
 
+        // Initiates dash if conditions are met
         if (context.started && !isDashing && dashCooldownTimeCounter > 0)
         {
             Dash();
@@ -192,12 +141,14 @@ public class PlayerMovement : MonoBehaviour
     {
         isDashing = true;
 
-        Vector3 forwardDirection = Vector3.ProjectOnPlane(transform.forward, Vector3.up);
+        // Projects the forward direction of the player on the horizontal plane
+        Vector3 forwardDirection = Vector3.ProjectOnPlane(transform.forward, Vector3.up).normalized;
         Vector3 forceToApply = forwardDirection * dashForce;
 
         rb.AddForce(forceToApply, ForceMode.Impulse);
     }
 
+    // Resets the dash state
     private void ResetDash()
     {
         isDashing = false;

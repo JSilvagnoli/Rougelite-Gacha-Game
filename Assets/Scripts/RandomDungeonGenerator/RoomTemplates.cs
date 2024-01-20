@@ -8,9 +8,13 @@ public class RoomTemplates : MonoBehaviour
 
     public GameObject[] enemyRooms;
 
-    public List<GameObject> specialRooms = new List<GameObject>();
+    public GameObject[] enemyRoomsWithOpenings;
 
-    public GameObject treasureRoom;
+    public GameObject[] specialRoomsLeft;
+    public GameObject[] specialRoomsRight;
+
+    public GameObject treasureRoomLeft;
+    public GameObject treasureRoomRight;
 
     public GameObject bossRoom;
 }

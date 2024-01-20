@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 
 public class InteractWithNPC : MonoBehaviour
 {
-    public List<GameObject> npcs;
+    private HashSet<GameObject> uniqueNPCs = new HashSet<GameObject>();
 
     public GameObject dialogueBox;
 
@@ -19,17 +19,30 @@ public class InteractWithNPC : MonoBehaviour
     private EnemyHealth enemyHealth;
     public Dialogue dialogue;
 
+    public GameObject interactButtonGameObject;
+    public Transform interactButton;
+
+    private void Start()
+    {
+        GameObject dialogueCanvas = GameObject.FindGameObjectWithTag("DialogueBox");
+
+        Transform dialogueBoxTransform = dialogueCanvas.transform.Find("Dialogue Box");
+        dialogueBox = dialogueBoxTransform.gameObject;
+
+        dialogue = dialogueBox.GetComponent<Dialogue>();
+    }
+
     public void OnInteract(InputAction.CallbackContext context)
     {
         if (context.started)
         {
-            foreach (GameObject npc in npcs)
+            foreach (GameObject npc in uniqueNPCs)
             {
                 float distanceToInteractWithNPC = Vector3.Distance(transform.position, npc.transform.position);
 
                 if (canInteractMap[npc] && distanceToInteractWithNPC <= interactWithNPCRange)
                 {
-                    if (isInteracting == false)
+                    if (!isInteracting)
                     {
                         isInteracting = true;
                         InteractWithNPCS(npc);
@@ -44,15 +57,21 @@ public class InteractWithNPC : MonoBehaviour
     {
         Vector3 playerPosition = transform.position;
 
-        foreach (GameObject npc in npcs)
+        GameObject[] foundNPCs = GameObject.FindGameObjectsWithTag("NPC");
+        foreach (GameObject npc in foundNPCs)
+        {
+            uniqueNPCs.Add(npc);
+        }
+
+        foreach (GameObject npc in uniqueNPCs)
         {
             float distanceToNPC = Vector3.Distance(playerPosition, npc.transform.position);
 
             if (distanceToNPC <= showInteractPrompt)
             {
-                if (npc.CompareTag("NPC") || (npc.CompareTag("Enemy NPC") && npc.GetComponent<EnemyHealth>()?.hasBeenDefeated == true))
-                { 
-                    if (isInteracting == false)
+                if (npc.CompareTag("NPC")) //|| (npc.CompareTag("Enemy NPC") && npc.GetComponent<EnemyHealth>()?.hasBeenDefeated == true))
+                {
+                    if (!isInteracting)
                     {
                         EnableInteractButton(npc);
                     }
@@ -75,11 +94,12 @@ public class InteractWithNPC : MonoBehaviour
 
     private void EnableInteractButton(GameObject npc)
     {
-        Transform interactButton = npc.transform.Find("Interact Button");
+        interactButton = npc.transform.Find("Interact Button");
 
         if (interactButton != null)
         {
-            interactButton.gameObject.SetActive(true);
+            interactButtonGameObject = interactButton.gameObject;
+            interactButtonGameObject.SetActive(true);
             canInteractMap[npc] = true;
         }
     }
@@ -90,14 +110,15 @@ public class InteractWithNPC : MonoBehaviour
 
         if (interactButton != null)
         {
-            interactButton.gameObject.SetActive(false);
+            interactButtonGameObject = interactButton.gameObject;
+            interactButtonGameObject.SetActive(false);
             canInteractMap[npc] = false;
         }
     }
 
     private void InteractWithNPCS(GameObject npc)
     {
-        int npcIndex = npcs.IndexOf(npc);
+        int npcIndex = new List<GameObject>(uniqueNPCs).IndexOf(npc);
 
         dialogue.npcIndex = npcIndex;
 

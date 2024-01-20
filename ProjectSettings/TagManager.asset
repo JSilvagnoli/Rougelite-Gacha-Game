@@ -7,9 +7,10 @@ TagManager:
   - SpawnPoint
   - Rooms
   - Room
-  - CenterPoint
   - DoNotSpawn
   - Character
+  - DialogueBox
+  - NPC
   layers:
   - Default
   - TransparentFX
