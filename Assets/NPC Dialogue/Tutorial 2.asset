@@ -12,8 +12,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aeff306a4698eff4abf72fff5a1ca2ba, type: 3}
   m_Name: Tutorial 2
   m_EditorClassIdentifier: 
-  npcName: Test
+  npcName: Ethan Magus Completed Tower
   lines:
-  - Testing
+  - Well, welcome back.
+  - I honestly didn't think you would make it, but it seems like you've gotten a
+    better understanding of your new powers.
+  - Sorry for dragging you here out of nowhere and throwing you into that tower,
+    but now you know exactly what we're dealing with.
+  - Anyways, welcome to the team.
+  - From now on it'll be up to you to recruit new members to the team.
+  - My duty is to prevent the enemy from escaping the towers, and notifying your
+    team when new towers appear.
+  - Gather 5 new allies and I'll provide you my assistance during battle.
+  - I would recommend speaking with the others here and getting yourself ready for
+    the next tower.
+  - You can always come talk to me if you need any help.
+  - Good luck!
   index: 1
-  npcGameObject: {fileID: 8199535394422172153, guid: c8fed2c69d67cbf449e994a0629060e0, type: 3}
+  npcGameObject: {fileID: 0}
+  spokenTo: 0

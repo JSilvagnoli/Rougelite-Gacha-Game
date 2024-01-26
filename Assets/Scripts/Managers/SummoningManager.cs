@@ -18,6 +18,7 @@ public class SummoningManager : MonoBehaviour
     public Button skipButton;
 
     public GameObject scrollView;
+    public GameObject newCharacter;
 
     public List<CharacterRarity> rarities;
 
@@ -28,6 +29,8 @@ public class SummoningManager : MonoBehaviour
     private bool multiSummon;
     private bool nextcharacter;
     private bool skipCharacters;
+    public bool firstCharacterSummoned;
+    public bool finishedInspectingCharacter;
 
     public int i;
 
@@ -45,6 +48,7 @@ public class SummoningManager : MonoBehaviour
     {
         singleSummon = true;
         SummonCharacters();
+        firstCharacterSummoned = true;
     }
 
     public void MultiSummon()
@@ -170,9 +174,10 @@ public class SummoningManager : MonoBehaviour
         nameText.gameObject.SetActive(false);
         descriptionText.gameObject.SetActive(false);
 
-        GameObject newCharacter = GameObject.FindGameObjectWithTag("Character");
-        newCharacter.SetActive(false);
+        newCharacter = GameObject.FindGameObjectWithTag("DisplayCharacter");
         scrollView.SetActive(false);
+
+        finishedInspectingCharacter = true;
     }
 
     public void SkipButton()

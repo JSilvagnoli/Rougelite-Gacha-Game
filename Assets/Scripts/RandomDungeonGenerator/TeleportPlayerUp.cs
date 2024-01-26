@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
-public class TeleportPlayerDown : MonoBehaviour
+public class TeleportPlayerUp : MonoBehaviour
 {
     public GameObject player;
 
@@ -15,14 +16,13 @@ public class TeleportPlayerDown : MonoBehaviour
     {
         if (other.CompareTag("Character"))
         {
-            TeleportToPreviousFloor();
+            TeleportToNextFloor();
         }
     }
 
-    private void TeleportToPreviousFloor()
+    private void TeleportToNextFloor()
     {
-        Debug.Log("Teleporting player down");
-        Vector3 teleportLocation = new Vector3(this.transform.position.x, this.transform.position.y - 100, this.transform.position.z + 100);
+        Vector3 teleportLocation = new Vector3(this.transform.position.x, this.transform.position.y + 250, this.transform.position.z - 900);
         player.transform.position = teleportLocation;
     }
 }

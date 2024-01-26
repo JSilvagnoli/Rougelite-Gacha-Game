@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa75959915ac796479a0fa99cb5e01c0, type: 3}
   m_Name: Marie Laveaux
   m_EditorClassIdentifier: 
-  model: {fileID: 4311452597091117019, guid: 45bc8d802f6b7fe4ca290836c4ccf166, type: 3}
+  model: {fileID: 4311452597091117019, guid: 3133c10fd1fa9f641ba31f02f22aa5ab, type: 3}
   characterName: Marie Laveaux
   description: Marie Laveaux, a skilled herbalist and healer in a small village,
     had always felt a deep connection to the mystical energies of the world. One

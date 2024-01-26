@@ -27,7 +27,7 @@ public class PlayerMovement : MonoBehaviour
     public Vector2 look, walk;
     Vector3 moveDirection;
 
-    private void Awake()
+    private void Start()
     {
         rb = GetComponent<Rigidbody>();
 

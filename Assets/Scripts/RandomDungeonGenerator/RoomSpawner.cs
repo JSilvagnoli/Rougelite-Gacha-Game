@@ -7,6 +7,7 @@ public class RoomSpawner : MonoBehaviour
 {
     private RoomTemplates roomTemplates;
     private RoomInformation roomInformation;
+    public TutorialManager tutorialManager;
 
     public int maxNumberOfRooms;
     public int numberOfRoomsSpawned;
@@ -20,12 +21,20 @@ public class RoomSpawner : MonoBehaviour
 
     private void Start()
     {
-        maxNumberOfRooms = Random.Range(22, 30);
+        if (tutorialManager.tutorialTower)
+        {
+            maxNumberOfRooms = 10;
+        }
+        else
+        {
+            maxNumberOfRooms = Random.Range(22, 30);
+        }
 
         roomTemplates = GameObject.FindGameObjectWithTag("Rooms").GetComponent<RoomTemplates>();
 
         // Spawn the starting room
-        GameObject startingRoom = Instantiate(roomTemplates.startingRoom, transform.position, Quaternion.identity);
+        GameObject startingRoom = Instantiate(roomTemplates.startingRoom, new Vector3(0, 0, 1000), Quaternion.identity);
+        startingRoom.transform.localScale = new Vector3(10, 10, 10);
 
         currentRoomPosition = startingRoom.transform.position;
 
@@ -55,8 +64,9 @@ public class RoomSpawner : MonoBehaviour
             }
 
             // Spawn a new room
-            newRoomPosition = new Vector3(currentRoomPosition.x, currentRoomPosition.y + 100, currentRoomPosition.z);
+            newRoomPosition = new Vector3(currentRoomPosition.x, currentRoomPosition.y + 300, currentRoomPosition.z);
             Instantiate(newRoom, newRoomPosition, Quaternion.identity);
+            newRoom.transform.localScale = new Vector3(10, 10, 10);
 
             currentRoomPosition = newRoomPosition;
 
@@ -86,32 +96,36 @@ public class RoomSpawner : MonoBehaviour
         {
             if (Random.Range(0, 100) < 5)
             {
-                newRoomPosition = new Vector3(currentRoomPosition.x + 100, currentRoomPosition.y, currentRoomPosition.z);
+                newRoomPosition = new Vector3(currentRoomPosition.x + 1000, currentRoomPosition.y, currentRoomPosition.z);
                 Instantiate(roomTemplates.treasureRoomLeft, newRoomPosition, Quaternion.identity);
+                newRoom.transform.localScale = new Vector3(10, 10, 10);
             }
             else
             {
                 int rand = Random.Range(0, roomTemplates.specialRoomsLeft.Length);
                 newRoom = roomTemplates.specialRoomsLeft[rand];
 
-                newRoomPosition = new Vector3(currentRoomPosition.x + 100, currentRoomPosition.y, currentRoomPosition.z);
+                newRoomPosition = new Vector3(currentRoomPosition.x + 1000, currentRoomPosition.y, currentRoomPosition.z);
                 Instantiate(newRoom, newRoomPosition, Quaternion.identity);
+                newRoom.transform.localScale = new Vector3(10, 10, 10);
             }
         }
         else
         {
             if (Random.Range(0, 100) < 5)
             {
-                newRoomPosition = new Vector3(currentRoomPosition.x - 100, currentRoomPosition.y, currentRoomPosition.z);
+                newRoomPosition = new Vector3(currentRoomPosition.x - 1000, currentRoomPosition.y, currentRoomPosition.z);
                 Instantiate(roomTemplates.treasureRoomRight, newRoomPosition, Quaternion.identity);
+                newRoom.transform.localScale = new Vector3(10, 10, 10);
             }
             else
             {
                 int rand = Random.Range(0, roomTemplates.specialRoomsRight.Length);
                 newRoom = roomTemplates.specialRoomsRight[rand];
 
-                newRoomPosition = new Vector3(currentRoomPosition.x - 100, currentRoomPosition.y, currentRoomPosition.z);
+                newRoomPosition = new Vector3(currentRoomPosition.x - 1000, currentRoomPosition.y, currentRoomPosition.z);
                 Instantiate(newRoom, newRoomPosition, Quaternion.identity);
+                newRoom.transform.localScale = new Vector3(10, 10, 10);
             }
         }
     }
@@ -121,7 +135,8 @@ public class RoomSpawner : MonoBehaviour
         newRoom = roomTemplates.bossRoom;
 
         // Spawn a new room at random
-        Vector3 newRoomPosition = new Vector3(currentRoomPosition.x, currentRoomPosition.y + 100, currentRoomPosition.z);
+        Vector3 newRoomPosition = new Vector3(currentRoomPosition.x, currentRoomPosition.y + 300, currentRoomPosition.z);
         Instantiate(newRoom, newRoomPosition, Quaternion.identity);
+        newRoom.transform.localScale = new Vector3(10, 10, 10);
     }
 }

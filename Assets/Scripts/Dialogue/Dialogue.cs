@@ -32,6 +32,7 @@ public class Dialogue : MonoBehaviour
         foreach (NPCDialogue npc in npcDialogueData)
         {
             npcInteractedStatus.Add(false);
+            npcDialogueData[npcIndex].spokenTo = false;
         }
     }
 
@@ -126,5 +127,7 @@ public class Dialogue : MonoBehaviour
         interactWithNPC.isInteracting = false;
 
         npcInteractedStatus[npcIndex] = true;
+
+        npcDialogueData[npcIndex].spokenTo = true;
     }
 }

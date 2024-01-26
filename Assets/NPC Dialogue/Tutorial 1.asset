@@ -23,3 +23,4 @@ MonoBehaviour:
     5 of them.
   index: 0
   npcGameObject: {fileID: 8199535394422172153, guid: b5159420daf972f4d922cdd216a85f0f, type: 3}
+  spokenTo: 1

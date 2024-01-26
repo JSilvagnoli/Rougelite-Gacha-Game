@@ -1,137 +1,116 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class InteractWithNPC : MonoBehaviour
 {
-    private HashSet<GameObject> uniqueNPCs = new HashSet<GameObject>();
+    public List<GameObject> nearbyNPCs = new List<GameObject>();
 
+    public float detectionRadius = 5.0f;
+
+    public GameObject interactButton;
     public GameObject dialogueBox;
+    Transform interactButtonTransform;
 
     public bool isInteracting = false;
 
-    public float interactWithNPCRange = 2.0f;
-    public float showInteractPrompt = 10.0f;
-
-    private Dictionary<GameObject, bool> canInteractMap = new Dictionary<GameObject, bool>();
-
-    private EnemyHealth enemyHealth;
-    public Dialogue dialogue;
-
-    public GameObject interactButtonGameObject;
-    public Transform interactButton;
+    public CharacterInstructions characterInstructions;
+    private PlayerMovement playerMovement;
 
     private void Start()
     {
-        GameObject dialogueCanvas = GameObject.FindGameObjectWithTag("DialogueBox");
+        dialogueBox = GameObject.Find("Dialogue Box");
 
-        Transform dialogueBoxTransform = dialogueCanvas.transform.Find("Dialogue Box");
-        dialogueBox = dialogueBoxTransform.gameObject;
-
-        dialogue = dialogueBox.GetComponent<Dialogue>();
+        dialogueBox.SetActive(false);
     }
 
     public void OnInteract(InputAction.CallbackContext context)
     {
-        if (context.started)
+        if (context.started && !isInteracting)
         {
-            foreach (GameObject npc in uniqueNPCs)
+            foreach (GameObject npc in nearbyNPCs)
             {
-                float distanceToInteractWithNPC = Vector3.Distance(transform.position, npc.transform.position);
+                float distanceToNPC = Vector3.Distance(transform.position, npc.transform.position);
 
-                if (canInteractMap[npc] && distanceToInteractWithNPC <= interactWithNPCRange)
+                if (distanceToNPC < detectionRadius)
                 {
-                    if (!isInteracting)
+                    // Play the instructions for this NPC
+                    characterInstructions = npc.GetComponent<CharacterInstructions>();
+
+                    if (characterInstructions != null )
                     {
+                        playerMovement = GetComponent<PlayerMovement>();
+
+                        if (playerMovement != null)
+                        {
+                            playerMovement.enabled = false;
+                        }
+
                         isInteracting = true;
-                        InteractWithNPCS(npc);
-                        break;
+                        dialogueBox.SetActive(true);
+                        characterInstructions.PerformNextInstruction();
                     }
                 }
+            }
+        }
+        else if (context.started && isInteracting)
+        {
+            if (characterInstructions.currentIndex < characterInstructions.actions.Count)
+            {
+                characterInstructions.SkipDialogue();
+                isInteracting = false;
             }
         }
     }
 
     private void Update()
     {
-        Vector3 playerPosition = transform.position;
+        Collider[] colliders = Physics.OverlapSphere(transform.position, detectionRadius);
 
-        GameObject[] foundNPCs = GameObject.FindGameObjectsWithTag("NPC");
-        foreach (GameObject npc in foundNPCs)
+        nearbyNPCs.Clear();
+
+        foreach (Collider collider in colliders)
         {
-            uniqueNPCs.Add(npc);
+            if (collider.CompareTag("NPC"))
+            {
+                nearbyNPCs.Add(collider.gameObject);
+            }
         }
 
-        foreach (GameObject npc in uniqueNPCs)
-        {
-            float distanceToNPC = Vector3.Distance(playerPosition, npc.transform.position);
+        UpdateInteractButtons();
 
-            if (distanceToNPC <= showInteractPrompt)
+        if (playerMovement != null && characterInstructions.currentIndex == characterInstructions.actions.Count)
+        {
+            playerMovement.enabled = true;
+        }
+    }
+
+    private void UpdateInteractButtons()
+    {
+        foreach (GameObject npc in nearbyNPCs)
+        {
+            // Check if the NPC has an interact button
+            interactButtonTransform = npc.transform.Find("Interact Button");
+
+            if (interactButtonTransform != null)
             {
-                if (npc.CompareTag("NPC")) //|| (npc.CompareTag("Enemy NPC") && npc.GetComponent<EnemyHealth>()?.hasBeenDefeated == true))
+                interactButton = interactButtonTransform.gameObject;
+
+                float distanceToNPC = Vector3.Distance(transform.position, npc.transform.position);
+
+                if (distanceToNPC <= detectionRadius)
                 {
-                    if (!isInteracting)
-                    {
-                        EnableInteractButton(npc);
-                    }
-                    else
-                    {
-                        DisableInteractButton(npc);
-                    }
+                    interactButton.SetActive(true);
                 }
                 else
                 {
-                    DisableInteractButton(npc);
+                    interactButton.SetActive(false);
+                    dialogueBox.SetActive(false);
+                    isInteracting = false;
                 }
             }
-            else
-            {
-                DisableInteractButton(npc);
-            }
         }
-    }
-
-    private void EnableInteractButton(GameObject npc)
-    {
-        interactButton = npc.transform.Find("Interact Button");
-
-        if (interactButton != null)
-        {
-            interactButtonGameObject = interactButton.gameObject;
-            interactButtonGameObject.SetActive(true);
-            canInteractMap[npc] = true;
-        }
-    }
-
-    private void DisableInteractButton(GameObject npc)
-    {
-        Transform interactButton = npc.transform.Find("Interact Button");
-
-        if (interactButton != null)
-        {
-            interactButtonGameObject = interactButton.gameObject;
-            interactButtonGameObject.SetActive(false);
-            canInteractMap[npc] = false;
-        }
-    }
-
-    private void InteractWithNPCS(GameObject npc)
-    {
-        int npcIndex = new List<GameObject>(uniqueNPCs).IndexOf(npc);
-
-        dialogue.npcIndex = npcIndex;
-
-        dialogueBox.SetActive(true);
-        StartCoroutine(StartDialogueDelay());
-    }
-
-    private IEnumerator StartDialogueDelay()
-    {
-        yield return new WaitForSeconds(0.1f);
-
-        dialogue.textComponent.text = string.Empty;
-
-        dialogue.StartDialogue();
     }
 }
