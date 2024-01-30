@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -6,111 +7,108 @@ using UnityEngine.InputSystem;
 
 public class InteractWithNPC : MonoBehaviour
 {
-    public List<GameObject> nearbyNPCs = new List<GameObject>();
+    private IInteractable interactableInstance;
 
-    public float detectionRadius = 5.0f;
+    private NPC npc;
 
-    public GameObject interactButton;
     public GameObject dialogueBox;
-    Transform interactButtonTransform;
 
-    public bool isInteracting = false;
+    private bool isInteracting = false;
+    public bool skipDialogue = false;
 
-    public CharacterInstructions characterInstructions;
-    private PlayerMovement playerMovement;
-
-    private void Start()
+    private void Awake()
     {
-        dialogueBox = GameObject.Find("Dialogue Box");
-
         dialogueBox.SetActive(false);
     }
 
     public void OnInteract(InputAction.CallbackContext context)
     {
-        if (context.started && !isInteracting)
+        if (context.started)
         {
-            foreach (GameObject npc in nearbyNPCs)
+            if (npc.AllNodesCompleted())
             {
-                float distanceToNPC = Vector3.Distance(transform.position, npc.transform.position);
+                Debug.Log("All nodes completed. No further interaction allowed.");
+                return;
+            }
 
-                if (distanceToNPC < detectionRadius)
+            if (!isInteracting)
+            {
+                // Start interaction if not already interacting
+                if (interactableInstance != null)
                 {
-                    // Play the instructions for this NPC
-                    characterInstructions = npc.GetComponent<CharacterInstructions>();
-
-                    if (characterInstructions != null )
-                    {
-                        playerMovement = GetComponent<PlayerMovement>();
-
-                        if (playerMovement != null)
-                        {
-                            playerMovement.enabled = false;
-                        }
-
-                        isInteracting = true;
-                        dialogueBox.SetActive(true);
-                        characterInstructions.PerformNextInstruction();
-                    }
-                }
-            }
-        }
-        else if (context.started && isInteracting)
-        {
-            if (characterInstructions.currentIndex < characterInstructions.actions.Count)
-            {
-                characterInstructions.SkipDialogue();
-                isInteracting = false;
-            }
-        }
-    }
-
-    private void Update()
-    {
-        Collider[] colliders = Physics.OverlapSphere(transform.position, detectionRadius);
-
-        nearbyNPCs.Clear();
-
-        foreach (Collider collider in colliders)
-        {
-            if (collider.CompareTag("NPC"))
-            {
-                nearbyNPCs.Add(collider.gameObject);
-            }
-        }
-
-        UpdateInteractButtons();
-
-        if (playerMovement != null && characterInstructions.currentIndex == characterInstructions.actions.Count)
-        {
-            playerMovement.enabled = true;
-        }
-    }
-
-    private void UpdateInteractButtons()
-    {
-        foreach (GameObject npc in nearbyNPCs)
-        {
-            // Check if the NPC has an interact button
-            interactButtonTransform = npc.transform.Find("Interact Button");
-
-            if (interactButtonTransform != null)
-            {
-                interactButton = interactButtonTransform.gameObject;
-
-                float distanceToNPC = Vector3.Distance(transform.position, npc.transform.position);
-
-                if (distanceToNPC <= detectionRadius)
-                {
-                    interactButton.SetActive(true);
+                    StartAction();
                 }
                 else
                 {
-                    interactButton.SetActive(false);
-                    dialogueBox.SetActive(false);
-                    isInteracting = false;
+                    Debug.Log("Nothing to interact with");
                 }
             }
+            else if (isInteracting && !skipDialogue)
+            {
+                // Skip dialogue if already interacting and it's a dialogue action
+                if (interactableInstance != null)
+                {
+                    skipDialogue = true;
+                    interactableInstance.InteractLogic();
+                }
+                else
+                {
+                    Debug.Log("Interactable instance is null?");
+                }
+            }
+            else if (isInteracting && skipDialogue)
+            {
+                // Check if the event is invoked
+                npc.goToNextAction = true;
+                isInteracting = false;
+                skipDialogue = false;
+
+                StartAction();
+            }
         }
+    }
+
+    public void StartAction()
+    {
+        dialogueBox.SetActive(true);
+        isInteracting = true;
+        interactableInstance.InteractLogic();
+    }
+
+    public void MoveToNextAction()
+    {
+        npc.goToNextAction = true;
+        StartAction();
+    }
+
+    public void SetIInstance(IInteractable interactable)
+    {
+        interactableInstance = interactable;
+    }
+
+    public void ClearIInstance()
+    {
+        interactableInstance = null;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (interactableInstance == null)
+        {
+            IInteractable interactable = other.GetComponent<IInteractable>();
+            if (interactable != null)
+            {
+                SetIInstance(interactable);
+            }
+        }
+
+        npc = other.GetComponent<NPC>();
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        ClearIInstance();
+        dialogueBox.SetActive(false);
+        isInteracting = false;
     }
 }

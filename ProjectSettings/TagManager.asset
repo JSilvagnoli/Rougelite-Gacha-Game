@@ -12,6 +12,7 @@ TagManager:
   - DialogueBox
   - NPC
   - DisplayCharacter
+  - Waypoint
   layers:
   - Default
   - TransparentFX

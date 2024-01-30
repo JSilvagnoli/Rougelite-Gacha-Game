@@ -1,0 +1,47 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5c02efb47abd7648ae18d0791c45ab3, type: 3}
+  m_Name: New Dialogue Controls
+  m_EditorClassIdentifier: 
+  nodes:
+  - action: 1
+    characterToPerformInstruction: Ethan Magus
+    dialogueInformation:
+      characterName: Ethan Magus
+      dialogueLine: Hello my name is Ethan Magus
+    walkInformation:
+      waypoint: Waypoint1
+      walkSpeed: 50
+  - action: 2
+    characterToPerformInstruction: Ethan Magus
+    dialogueInformation:
+      characterName: Ethan Magus
+      dialogueLine: This is just a dialogue test
+    walkInformation:
+      waypoint: Waypoint1
+      walkSpeed: 50
+  - action: 1
+    characterToPerformInstruction: Ethan Magus
+    dialogueInformation:
+      characterName: Ethan Magus
+      dialogueLine: This is just a dialogue test
+    walkInformation:
+      waypoint: Waypoint1
+      walkSpeed: 50
+  - action: 2
+    characterToPerformInstruction: Ethan Magus
+    dialogueInformation:
+      characterName: Ethan Magus
+      dialogueLine: This is just a dialogue test
+    walkInformation:
+      waypoint: Waypoint2
+      walkSpeed: 50

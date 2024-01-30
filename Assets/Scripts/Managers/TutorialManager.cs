@@ -23,7 +23,7 @@ public class TutorialManager : MonoBehaviour
 
     public SummoningManager summoningManager;
     public CharacterCollectionManager characterCollectionManager;
-    private Dialogue dialogue;
+    //private Dialogue dialogue;
 
     public Camera introCamera;
     public Camera summoningSceneCamera;
@@ -40,9 +40,9 @@ public class TutorialManager : MonoBehaviour
         summoningSceneCamera.gameObject.SetActive(false);
         mainCharacterCamera.gameObject.SetActive(false);
         startingArea.SetActive(false);
-        dialogue = dialogueBox.GetComponent<Dialogue>();
+        //dialogue = dialogueBox.GetComponent<Dialogue>();
         roomManager.SetActive(false);
-        dialogue.npcDialogueData[dialogue.npcIndex].spokenTo = false;
+        //dialogue.npcDialogueData[dialogue.npcIndex].spokenTo = false;
     }
 
     private void Update()

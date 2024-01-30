@@ -222,7 +222,6 @@ GameObject:
   m_Component:
   - component: {fileID: 8827417365747004227}
   - component: {fileID: 2592924700159473190}
-  - component: {fileID: 419162017533376472}
   m_Layer: 0
   m_Name: Ethan Magus NPC
   m_TagString: NPC
@@ -262,27 +261,3 @@ CapsuleCollider:
   m_Height: 19.62
   m_Direction: 1
   m_Center: {x: 0.0000035762787, y: 9.871417, z: -0.025212407}
---- !u!114 &419162017533376472
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8199535394422172153}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7618c218da3e6744e847529f5d2a8330, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  actions:
-  - action: 1
-    dialogueInformation:
-      characterName: Ethan Magus
-      dialogueLine: Hello my name is Ethan Magus.
-  - action: 1
-    dialogueInformation:
-      characterName: Ethan Magus
-      dialogueLine: What happens?
-  textComponent: {fileID: 0}
-  currentIndex: 0
-  textSpeed: 0.08

@@ -14,7 +14,7 @@ public class PlayerCombat : MonoBehaviour
     public LayerMask enemyLayer;
 
     private EnemyHealth enemyHealth;
-    public Dialogue dialogue;
+    //public Dialogue dialogue;
 
     public void OnAttack(InputAction.CallbackContext context)
     {

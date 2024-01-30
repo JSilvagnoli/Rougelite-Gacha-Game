@@ -113,7 +113,6 @@ GameObject:
   - component: {fileID: 7421955918095408110}
   - component: {fileID: 7421955918095408111}
   - component: {fileID: 7421955918095408108}
-  - component: {fileID: 7421955918095408097}
   - component: {fileID: 7421955918095408109}
   m_Layer: 0
   m_Name: Ethan Magus
@@ -207,7 +206,6 @@ MonoBehaviour:
   enemyLayer:
     serializedVersion: 2
     m_Bits: 64
-  dialogue: {fileID: 0}
 --- !u!114 &7421955918095408111
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -235,27 +233,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dialogueBox: {fileID: 0}
-  isInteracting: 0
-  interactWithNPCRange: 20
-  showInteractPrompt: 20
-  dialogue: {fileID: 0}
-  interactButtonGameObject: {fileID: 0}
-  interactButton: {fileID: 0}
---- !u!114 &7421955918095408097
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4311452597091117019}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 97be713f86331d54490da7d6321ce018, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isClicking: 0
-  dialogueBox: {fileID: 0}
-  dialogue: {fileID: 0}
+  skipDialogue: 0
 --- !u!114 &7421955918095408109
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -377,22 +355,6 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: a1849346-fc1b-4f5f-9a66-aa7c7c390c03
     m_ActionName: PlayerInput/Interact[/Keyboard/e]
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 7421955918095408097}
-        m_TargetAssemblyTypeName: DialogueController, Assembly-CSharp
-        m_MethodName: OnClick
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: 38fe8b3b-ab25-42ff-8bcd-2b4c6c11d882
-    m_ActionName: PlayerInput/Click[/Mouse/leftButton]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: PlayerInput
