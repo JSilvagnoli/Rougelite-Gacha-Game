@@ -7,9 +7,7 @@ using UnityEngine;
 public class InstructionManager : MonoBehaviour
 {
     public List<InstructionNode> actions = new List<InstructionNode>();
-    public List<AlternateDialogueLines> alteranateDialogueLines = new List<AlternateDialogueLines>();
 
-    public GameObject dialogueBox;
     public TextMeshProUGUI textComponent;
 
     public int currentIndex;

@@ -14,34 +14,39 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nodes:
   - action: 1
-    characterToPerformInstruction: Ethan Magus
+    characterToPerformInstruction: Damien Mortis
     dialogueInformation:
-      characterName: Ethan Magus
-      dialogueLine: Hello my name is Ethan Magus
+      dialogueLine: My name is Damien Mortis! Nice to meet you!
     walkInformation:
-      waypoint: Waypoint1
+      charactersToMove: []
+      waypoints: []
       walkSpeed: 50
   - action: 2
     characterToPerformInstruction: Ethan Magus
     dialogueInformation:
-      characterName: Ethan Magus
-      dialogueLine: This is just a dialogue test
+      dialogueLine: Just a test this is
     walkInformation:
-      waypoint: Waypoint1
+      charactersToMove:
+      - Ethan Magus
+      - Damien Mortis
+      waypoints:
+      - Waypoint1
+      - Waypoint2
       walkSpeed: 50
   - action: 1
     characterToPerformInstruction: Ethan Magus
     dialogueInformation:
-      characterName: Ethan Magus
-      dialogueLine: This is just a dialogue test
+      dialogueLine: Hello my name is Ethan Magus
     walkInformation:
-      waypoint: Waypoint1
+      charactersToMove: []
+      waypoints: []
       walkSpeed: 50
-  - action: 2
-    characterToPerformInstruction: Ethan Magus
-    dialogueInformation:
-      characterName: Ethan Magus
-      dialogueLine: This is just a dialogue test
-    walkInformation:
-      waypoint: Waypoint2
-      walkSpeed: 50
+  alternateDialogue:
+  - characterToPerformDialogue: 0
+    alternateDialogueLines:
+    - Go and take on the tower!
+    - You can do it!
+  - characterToPerformDialogue: 2
+    alternateDialogueLines:
+    - Hello!
+    - What nice weather we're having huh?

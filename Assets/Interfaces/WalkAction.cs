@@ -2,12 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using Unity.VisualScripting;
+using UnityEngine.TextCore.Text;
 
 public class WalkAction : INodeAction
 {
     private InstructionNode node;
 
-    // We must provide this public propterty to satisfy the interface
+    private string[] waypointsToMoveTo;
+    private string[] charactersToMove;
+
+    private GameObject[] characters;
+    private GameObject[] waypoints;
+
+    private bool[] characterReachedWaypoint;
+
+    private float walkSpeed;
 
     public WalkAction(InstructionNode node)
     {
@@ -18,56 +28,119 @@ public class WalkAction : INodeAction
     // We must provide this public method to satisfy the interface
     public IEnumerator Execute()
     {
-        string characterToMove = node.characterToPerformInstruction;
-        string waypointToMoveTo = node.walkInformation.waypoint;
-        float walkSpeed = node.walkInformation.walkSpeed;
+        GameObject player = GameObject.FindGameObjectWithTag("Character");
+        InteractWithNPC interactWithNPC = player.GetComponent<InteractWithNPC>();
 
-        GameObject character = FindCharacterByName(characterToMove);
-        GameObject waypoint = FindWayPointByName(waypointToMoveTo);
+        interactWithNPC.canSkip = false;
 
-        if (character == null)
+        waypointsToMoveTo = node.walkInformation.waypoints;
+        charactersToMove = node.walkInformation.charactersToMove;
+        walkSpeed = node.walkInformation.walkSpeed;
+
+        characters = new GameObject[charactersToMove.Length];
+        waypoints = new GameObject[waypointsToMoveTo.Length];
+
+        characterReachedWaypoint = new bool[charactersToMove.Length];
+
+        // Retrieve references to characters and waypoints
+        for (int i = 0; i < charactersToMove.Length; i++)
         {
-            Debug.Log("Character not found");
+            characters[i] = FindCharacterByName(charactersToMove[i]);
+            characterReachedWaypoint[i] = false;
         }
 
-        // Move the character to the waypoint
-        Transform transform = character.transform;
-        Vector3 targetPosition = waypoint.transform.position;
-
-        while (transform.position != targetPosition)
+        for (int i = 0; i < node.walkInformation.waypoints.Length; i++)
         {
-            transform.position = Vector3.MoveTowards(transform.position, targetPosition, walkSpeed * Time.deltaTime);
+            waypoints[i] = FindCharacterByName(waypointsToMoveTo[i]);
+        }
+
+        // Ensure we have characters and waypoints to move to
+        if (characters.Length == 0 || waypoints.Length == 0 || characters.Length != waypoints.Length)
+        {
+            Debug.LogError("Invalid number of characters or waypoints.");
+            yield break;
+        }
+
+        // Move each character to its respective waypoint simultaneously
+        while (!AllCharactersReachedWaypoints())
+        {
+            for (int i = 0; i < characters.Length; i++)
+            {
+                if (!characterReachedWaypoint[i])
+                {
+                    MoveCharacter(characters[i], waypoints[i]);
+                }
+            }
             yield return null;
         }
 
-        GameObject player = GameObject.FindGameObjectWithTag("Character");
-        InteractWithNPC interactWithNPC = player.GetComponent<InteractWithNPC>();
+        // Once all characters have reached their waypoints, proceed to the next action
+        Debug.Log("All characters reached their destinations");
         interactWithNPC.MoveToNextAction();
     }
 
     private GameObject FindCharacterByName(string name)
     {
-        GameObject[] characters = GameObject.FindGameObjectsWithTag("NPC");
-        foreach (GameObject character in characters)
+        GameObject character = GameObject.Find(name);
+
+        if (character == null)
         {
-            if (character.name == name)
-            {
-                return character;
-            }
+            Debug.LogError("Character with name " + name + " not found in the scene.");
+            return null;
         }
-        return null;
+
+        return character;
     }
 
     private GameObject FindWayPointByName(string name)
     {
-        GameObject[] wayPoints = GameObject.FindGameObjectsWithTag("Waypoint");
-        foreach (GameObject waypoint in wayPoints)
+        GameObject waypoint = GameObject.Find(name);
+
+        if (waypoint == null)
         {
-            if (waypoint.name == name)
+            Debug.LogError("Waypoint with name " + waypoint + " not found in the scene.");
+            return null;
+        }
+
+        return waypoint;
+    }
+
+    private void MoveCharacter(GameObject character, GameObject waypoint)
+    {
+        Transform transform = character.transform;
+        Vector3 targetPosition = waypoint.transform.position;
+
+        if (Vector3.Distance(transform.position, targetPosition) > 0.01f)
+        {
+            transform.position = Vector3.MoveTowards(transform.position, targetPosition, walkSpeed * Time.deltaTime);
+        }
+        else
+        {
+            MarkCharacterReachedWaypoint(character);
+        }
+    }
+
+    private void MarkCharacterReachedWaypoint(GameObject character)
+    {
+        for (int i = 0; i < characters.Length; i++)
+        {
+            if (characters[i] == character)
             {
-                return waypoint;
+                characterReachedWaypoint[i] = true;
+                break;
             }
         }
-        return null;
+    }
+
+    private bool AllCharactersReachedWaypoints()
+    {
+        foreach (bool reached in characterReachedWaypoint)
+        {
+            if (!reached)
+            {
+                return false;
+            }
+        }
+        return true;
     }
 }

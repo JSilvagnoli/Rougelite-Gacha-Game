@@ -7,7 +7,6 @@ public class TutorialManager : MonoBehaviour
 {
     public GameObject ethanMagusNPC;
     public GameObject summoningBox;
-    public GameObject dialogueBox;
     public GameObject startingArea;
     public GameObject introBox;
     public GameObject roomManager;
@@ -35,7 +34,6 @@ public class TutorialManager : MonoBehaviour
     {
         introBox.SetActive(false);
         introCamera.gameObject.SetActive(false);
-        dialogueBox.SetActive(false);
         summoningBox.SetActive(false);
         summoningSceneCamera.gameObject.SetActive(false);
         mainCharacterCamera.gameObject.SetActive(false);

@@ -11,51 +11,119 @@ public class NPC : MonoBehaviour, IInteractable
 {
     // Reference to the CharacterInstructions ScriptableObject
     public CharacterInstructions characterInstructions;
-    private InteractWithNPC interactWithNPC;
+    public InteractWithNPC interactWithNPC;
+
+    public GameObject dialogueBox;
+
+    private TextMeshProUGUI textComponent;
+
+    private float textSpeed = 0.08f;
+    private string skippedText = "";
 
     private Coroutine currentCoroutine = null;
+    private Coroutine altDialogueCoroutine = null;
 
     public bool goToNextAction = false;
+    public bool deactivateDialogueBox = false;
+    public bool allNodesCompleted = false;
 
-    // This is for testing purposes only
     Dictionary<InstructionNode, bool> nodeCompletionStatus = new Dictionary<InstructionNode, bool>();
     InstructionNode currentNode = null;
 
     private void Start()
     {
         GetNodes();
+        dialogueBox.SetActive(false);
     }
 
     public void InteractLogic()
     {
-        if (characterInstructions != null && characterInstructions.Nodes.Length > 0)
+        if (!AllNodesCompleted())
         {
-            if (currentNode != null)
+            if (characterInstructions != null && characterInstructions.Nodes.Length > 0)
             {
-                if (goToNextAction && !nodeCompletionStatus[currentNode])
+                if (currentNode != null)
                 {
-                    nodeCompletionStatus[currentNode] = true;
-                    goToNextAction = false;
+                    if (goToNextAction && !nodeCompletionStatus[currentNode])
+                    {
+                        nodeCompletionStatus[currentNode] = true;
+                        goToNextAction = false;
+                    }
                 }
+
+                foreach (var kvp in nodeCompletionStatus)
+                {
+                    InstructionNode node = kvp.Key;
+                    bool completionStatus = kvp.Value;
+                    Debug.Log("Node: " + node + ", Completion Status: " + completionStatus);
+                }
+
+                StartCoroutine(ExecuteInstructions());
             }
             else
             {
-                Debug.Log("No current node found or all nodes completed.");
+                Debug.LogWarning("No dialogue instructions set for this NPC.");
             }
-
-            foreach (var kvp in nodeCompletionStatus)
-            {
-                InstructionNode node = kvp.Key;
-                bool completionStatus = kvp.Value;
-
-                Debug.Log("Node: " + node + ", Completion Status: " + completionStatus);
-            }
-
-            StartCoroutine(ExecuteInstructions());
         }
         else
         {
-            Debug.LogWarning("No dialogue instructions set for this NPC.");
+            if (altDialogueCoroutine != null)
+            {
+                StopCoroutine(altDialogueCoroutine);
+            }
+            Debug.Log("Alternate Dialogue Line");
+            altDialogueCoroutine = StartCoroutine(HandleAlternateDialogue());
+        }
+    }
+
+    private IEnumerator HandleAlternateDialogue()
+    {
+        GameObject player = GameObject.FindGameObjectWithTag("Character");
+        interactWithNPC = player.GetComponent<InteractWithNPC>();
+
+        if (characterInstructions != null && characterInstructions.AlternateDialogue.Length > 0)
+        {
+            if (!interactWithNPC.alternateDialogue)
+            {
+                foreach (AlternateDialogueLine alternateDialogueLine in characterInstructions.AlternateDialogue)
+                {
+                    if (EnumHelper.GetEnumDescription(alternateDialogueLine.characterToPerformDialogue) == this.gameObject.name)
+                    {
+                        int randomLine = UnityEngine.Random.Range(0, alternateDialogueLine.alternateDialogueLines.Length);
+                        string randomDialogueLine = alternateDialogueLine.alternateDialogueLines[randomLine];
+
+                        dialogueBox.SetActive(true);
+
+                        GameObject characterNameTextBox = GameObject.Find("Character Name Text");
+                        TextMeshProUGUI nameComponent = characterNameTextBox.GetComponent<TextMeshProUGUI>();
+
+                        nameComponent.text = EnumHelper.GetEnumDescription(alternateDialogueLine.characterToPerformDialogue);
+
+                        GameObject dialogueTextBox = GameObject.Find("Dialogue Text");
+                        textComponent = dialogueTextBox.GetComponent<TextMeshProUGUI>();
+
+                        skippedText = randomDialogueLine;
+
+                        textComponent.text = "";
+
+                        foreach (char c in randomDialogueLine.ToCharArray())
+                        {
+                            if (textComponent != null)
+                            {
+                                textComponent.text += c;
+                            }
+
+                            yield return new WaitForSeconds(textSpeed);
+                        }
+
+                        interactWithNPC.skipDialogue = true;
+                    }
+                }
+            }
+            else if (interactWithNPC.alternateDialogue)
+            {
+                textComponent.text = skippedText;
+            }
         }
     }
 
@@ -85,6 +153,8 @@ public class NPC : MonoBehaviour, IInteractable
             {
                 if (interactWithNPC != null)
                 {
+                    dialogueBox.SetActive(true);
+
                     if (!interactWithNPC.skipDialogue)
                     {
                         currentCoroutine = StartCoroutine(nodeAction.Execute());
@@ -102,6 +172,8 @@ public class NPC : MonoBehaviour, IInteractable
             }
             else if (nodeAction is WalkAction)
             {
+                dialogueBox.SetActive(false);
+
                 StartCoroutine(nodeAction.Execute());
                 break;
             }
@@ -116,6 +188,11 @@ public class NPC : MonoBehaviour, IInteractable
     // Method to check if all nodes are completed
     public bool AllNodesCompleted()
     {
+        if (allNodesCompleted)
+        {
+            return true;
+        }
+
         foreach (bool completionStatus in nodeCompletionStatus.Values)
         {
             if (!completionStatus)
@@ -124,6 +201,11 @@ public class NPC : MonoBehaviour, IInteractable
             }
         }
 
+        if (!deactivateDialogueBox)
+        {
+            Debug.Log("All nodes completed");
+            dialogueBox.SetActive(false);
+        }
         return true;
     }
 }

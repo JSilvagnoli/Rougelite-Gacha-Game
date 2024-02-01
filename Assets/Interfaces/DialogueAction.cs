@@ -8,7 +8,6 @@ using Unity.VisualScripting;
 public class DialogueAction : INodeAction
 {
     private InstructionNode node;
-    private InteractWithNPC interactWithNPC;
 
     private float textSpeed = 0.08f;
 
@@ -25,11 +24,18 @@ public class DialogueAction : INodeAction
         GameObject dialogueTextBox = GameObject.Find("Dialogue Text");
         TextMeshProUGUI textComponent = dialogueTextBox.GetComponent<TextMeshProUGUI>();
 
+        GameObject characterNameTextBox = GameObject.Find("Character Name Text");
+        TextMeshProUGUI nameComponent = characterNameTextBox.GetComponent<TextMeshProUGUI>();
+
         GameObject player = GameObject.FindGameObjectWithTag("Character");
-        interactWithNPC = player.GetComponent<InteractWithNPC>();
+        InteractWithNPC interactWithNPC = player.GetComponent<InteractWithNPC>();
+
+        interactWithNPC.canSkip = true;
 
         if (interactWithNPC != null)
         {
+            nameComponent.text = node.characterToPerformInstruction.ToString();
+
             if (!interactWithNPC.skipDialogue)
             {
                 textComponent.text = "";

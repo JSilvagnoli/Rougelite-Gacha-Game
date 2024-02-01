@@ -13,64 +13,74 @@ public class InteractWithNPC : MonoBehaviour
 
     public GameObject dialogueBox;
 
-    private bool isInteracting = false;
+    public bool isInteracting = false;
     public bool skipDialogue = false;
+    public bool canInteract = false;
+    public bool canSkip = false;
+    public bool alternateDialogue = false;
 
-    private void Awake()
-    {
-        dialogueBox.SetActive(false);
-    }
+    public NPC npcScript;
+
+    List<string> npcs = new List<string>();
 
     public void OnInteract(InputAction.CallbackContext context)
     {
-        if (context.started)
+        if (canInteract)
         {
-            if (npc.AllNodesCompleted())
+            if (context.started)
             {
-                Debug.Log("All nodes completed. No further interaction allowed.");
-                return;
-            }
-
-            if (!isInteracting)
-            {
-                // Start interaction if not already interacting
-                if (interactableInstance != null)
+                if (npc.AllNodesCompleted() && !alternateDialogue)
                 {
+                    npc.deactivateDialogueBox = true;
+                    skipDialogue = false;
                     StartAction();
+                    alternateDialogue = true;
+                    canSkip = true;
                 }
-                else
+                else if (!isInteracting && !npc.AllNodesCompleted())
                 {
-                    Debug.Log("Nothing to interact with");
+                    // Start interaction if not already interacting
+                    if (interactableInstance != null)
+                    {
+                        StartAction();
+                    }
+                    else
+                    {
+                        Debug.Log("Nothing to interact with");
+                    }
                 }
-            }
-            else if (isInteracting && !skipDialogue)
-            {
-                // Skip dialogue if already interacting and it's a dialogue action
-                if (interactableInstance != null)
+                else if (isInteracting && !skipDialogue)
                 {
-                    skipDialogue = true;
-                    interactableInstance.InteractLogic();
+                    if (canSkip)
+                    {
+                        // Skip dialogue if already interacting and it's a dialogue action
+                        if (interactableInstance != null)
+                        {
+                            skipDialogue = true;
+                            interactableInstance.InteractLogic();
+                            canSkip = false;
+                            alternateDialogue = false;
+                        }
+                    }                    
                 }
-                else
+                else if (isInteracting && skipDialogue && !npc.AllNodesCompleted())
                 {
-                    Debug.Log("Interactable instance is null?");
-                }
-            }
-            else if (isInteracting && skipDialogue)
-            {
-                // Check if the event is invoked
-                npc.goToNextAction = true;
-                isInteracting = false;
-                skipDialogue = false;
+                    // Check if the event is invoked
+                    npc.goToNextAction = true;
+                    isInteracting = false;
+                    skipDialogue = false;
+                    alternateDialogue = false;
 
-                StartAction();
+                    StartAction();
+                    npc.AllNodesCompleted();
+
+                }
             }
         }
     }
 
     public void StartAction()
     {
-        dialogueBox.SetActive(true);
         isInteracting = true;
         interactableInstance.InteractLogic();
     }
@@ -83,32 +93,77 @@ public class InteractWithNPC : MonoBehaviour
 
     public void SetIInstance(IInteractable interactable)
     {
+        Debug.Log("Interactable instance set");
+
         interactableInstance = interactable;
     }
 
     public void ClearIInstance()
     {
+        Debug.Log("Interactable instance cleared");
+
         interactableInstance = null;
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (interactableInstance == null)
+        Debug.Log("Trigger entered");
+        npc = other.GetComponent<NPC>();
+        string npcName = other.gameObject.name;
+
+        if (npc != null)
         {
-            IInteractable interactable = other.GetComponent<IInteractable>();
-            if (interactable != null)
+            CharacterInstructions instructions = npc.characterInstructions;
+            if (instructions != null)
             {
-                SetIInstance(interactable);
+                foreach (InstructionNode node in instructions.Nodes)
+                {
+                    npcs.Add(node.characterToPerformInstruction);
+                }
             }
         }
 
-        npc = other.GetComponent<NPC>();
+        if (npcs.Contains(npcName))
+        {
+            canInteract = true;
+
+            if (interactableInstance == null)
+            {
+                IInteractable interactable = other.GetComponent<IInteractable>();
+                if (interactable != null)
+                {
+                    SetIInstance(interactable);
+                }
+            }
+        }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        ClearIInstance();
-        dialogueBox.SetActive(false);
-        isInteracting = false;
+        Debug.Log("Trigger exited");
+
+        if (interactableInstance != null)
+        {
+            if (npc.AllNodesCompleted())
+            {
+                foreach (string npcToFind in npcs)
+                {
+                    GameObject npcObject = GameObject.Find(npcToFind);
+                    Debug.Log(npcToFind);
+                    if (npcObject != null)
+                    {
+                        npcScript = npcObject.GetComponent<NPC>();
+                        Debug.Log(npcScript);
+                        if (npcScript != null)
+                        {
+                            npcScript.allNodesCompleted = true;
+                        }
+                    }
+                }
+            }
+            npcs.Clear();
+            ClearIInstance();
+            dialogueBox.SetActive(false);
+        }
     }
 }

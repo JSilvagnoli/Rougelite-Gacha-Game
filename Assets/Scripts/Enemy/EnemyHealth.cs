@@ -9,8 +9,6 @@ public class EnemyHealth : MonoBehaviour
 
     public bool hasBeenDefeated = false;
 
-    public GameObject dialogueBox;
-
     private void Start()
     {
         currentHealth = maxHealth;
@@ -44,10 +42,5 @@ public class EnemyHealth : MonoBehaviour
     public void Die()
     {
         gameObject.SetActive(false);
-    }
-
-    public void Text()
-    {
-        dialogueBox.SetActive(true);
     }
 }
